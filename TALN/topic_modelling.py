@@ -9,11 +9,8 @@ import gensim
 from gensim import corpora
 
 PATH="dataset/"
-FILE="sample_lyrics.csv"
-PATHFILE=PATH+FILE
-
-PATH="dataset/"
-FILE="sample_lyrics.csv"
+FILE="sample.csv"
+FILE2="sample_lyrics.csv"
 PATHFILE=PATH+FILE
 STOP_WORDS = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
               "yourselves",
@@ -55,13 +52,13 @@ def extract_words(text) -> List:
     corpus = text.split("\n")
     corpus_words = []
     words = []
-    replacelist = set(' \' ? : ; , . !'.split(' '))
+    replacelist = set('( ) - \' ? : ; , . !'.split(' '))
     for line in corpus:
         for word in line.lower().split():
             if word not in SPACY_STOPWORDS:
                 for char in word:
                     if char in replacelist:
-                        word = word.replace(char, "")
+                        word = word.replace(char,"")
                 if word not in STOP_WORDS:
                     words.append(word)
         corpus_words.append(words)
@@ -85,7 +82,7 @@ def lemmatize_corpus(liste, threshold, exclusion=True):
                 word_frequency[token] += 1
             else:
                 word_frequency[token] = 1
-
+    #print("word frequency : ",word_frequency)
     for text in corpus_words:
         for token in text:
             if exclusion:
@@ -93,14 +90,12 @@ def lemmatize_corpus(liste, threshold, exclusion=True):
                     words.append(token)
                     lemmatizer = Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES)
                     lemmas = lemmatizer(token, u'NOUN')
+                    lemmas_words.append(" ".join(lemmas))
             else:
-                words.append(token)
                 lemmatizer = Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES)
                 lemmas = lemmatizer(token, u'NOUN')
-
                 # print("token : ",token," Lemmatization : ",lemmas)
-        lemmas_words.append(" ".join(lemmas))
-        words = []
+                lemmas_words.append(" ".join(lemmas))
     #print("lemmas words : \n", lemmas_words)
     return lemmas_words
 
@@ -133,6 +128,7 @@ def lda_on_corpus(corpus):
                                                 passes=5,
                                                 alpha='auto',
                                                 per_word_topics=True)
+    #print(lda_model.print_topics())
     return lda_model
 
 
@@ -154,21 +150,17 @@ def extract_lda_values(lda_model):
         for val in tab:
             val = val.strip().split("*")
             dic_values[val[1]] = val[0]
-        print(value)
+        #print(value)
         dic_id[key] = dic_values
-    print(dic_id)
+    #print(dic_id)
     return dic_id
 
 
 def run():
     corpus = set_corpus()
-    # start boucle for
-    with open(PATHFILE,"r") as ff:
-        text = ff.read()
-    corpus_words = extract_words(text)
+    corpus_words = extract_words(PATH+FILE)
     lemmas_words = lemmatize_corpus(corpus_words,1,exclusion=False)
     add_to_corpus(corpus,lemmas_words)
-    #end boucle for
     lda_model = lda_on_corpus(corpus)
     extract_lda_values(lda_model)
 
