@@ -1,0 +1,8 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+login_page:
+  path: login
+  defaults:
+    template: 'auth/login.html.twig'
