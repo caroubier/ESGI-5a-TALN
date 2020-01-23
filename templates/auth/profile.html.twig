@@ -1,0 +1,278 @@
+ 
+ <!--{% block content %}
+ 
+<div class="ui container">
+  <h1>Profile</h1>
+  <div class="ui cards">
+    <div class="ui raised card">
+      <div class="content">
+        <div class="header">{{ me.display_name }}</div>
+        <div class="meta">
+          <span class="right floated time">
+            <a href="{{ me.external_urls.spotify }}" target="_blank"><i class="linkify icon"></i></a>
+          </span>
+          <span class="category">{{ me.id }}</span>
+        </div>
+        <div class="description">
+          {{ me.product }}
+        </div>
+      </div>
+      <div class="extra content">
+        <i class="check icon"></i>
+        {{ me.followers.total }} Followers
+      </div>
+    </div>
+  </div>
+
+  <a href="{{ path('logout') }}" class="ui red button right floated"><i class="power icon"></i> Logout</a>
+
+  <pre><code>
+    {{ dump(me) }}
+  </code></pre>
+</div> 
+{% endblock %} -->
+
+ 
+{{ include('auth/header.html.twig')}}
+{{ include('auth/sidleft.html.twig')}}
+  
+
+  <style>
+  #Graphique{
+    max-width: 96.666667%;
+  }
+
+  #recherche {
+    position :center ;
+    padding-left : 35% ;
+  }
+#searcheEspace {
+   background-color : white; /*#d8dadd*/;
+}
+  .col-md-8 { 
+    max-width: 96.666667%;
+  }
+  .mr-sm-2 {
+      font-size: 25px;
+  }
+   .folowers{
+    padding: 0.38rem;
+    font-size: 1.875rem;
+    line-height: 0.333333;
+    border-radius: 0.2rem;
+}
+
+  #f{
+      margin-bottom : 0.2px ;
+      margin-top : 5px ;
+
+  }
+
+  </style>
+
+
+      <!-- End Navbar -->
+    <div class="content">
+    <div class="container-fluid">
+      
+
+        <div class="content-wrapper">
+            <section class="content-header">
+             {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('warning') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+                <div>  </div>
+            </section>
+
+ 
+            <div class="col-md-8 col-10 mr-auto ml-auto">
+            
+              <div class="row">
+                
+                <div class="card" id="searcheEspace">
+                 <form id="recherche" class="form-inline" method ="post" role="form">
+                 <label for ="to_searche">
+                 </label>
+                   <input  class="form-control mr-sm-2" type="search" name="to_searche" placeholder="Recherche" aria-label="Search">  
+                   <button class="btn btn-outline-info my-2 my-sm-10" name="submit" value="searche" type="submit">Recherche</button>
+                 </form>
+               </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                             <div class="table-responsive">
+                              
+                              <form  method ="post" enctype="multipart/form-data" >
+                                <input name="userfile" type="file" value="table">
+                                <input  name="submit"  type="submit" value="importer">
+                              </form>   
+                              
+                                <table id="datatables" class="table table-striped">
+                                 
+                                 {% if result != null %}
+                                    <thead>
+                                    <tr>
+                                         
+                                        <th>Name</th>
+                                        <th>Spotify</th>
+                                        <th>Description/folowers</th>
+                                        <th>Photos</th> 
+                                         
+                                         
+                                    </tr>
+                                    </thead>
+
+                                   <tbody>
+                                         {% for R in result %}
+                                            <tr rol="row" class="odd">
+                                                <td>{{R.name}} </td>
+                                                <td>  <a class="nav-link" href="{{R.external_urls.spotify}}" target="_blank" >
+                                                      <i class="material-icons dp48">queue_music</i>
+                                                    </a>
+                                                  
+                                                </td>
+
+                                                <td>  <p>{{R.description}}</p>  </td>
+                                                
+                                                <td> 
+                                                <p>{{R.img}}</p>
+                                                <!-- {% set liste = [] %}
+                                                 {% for img  in R.images %}  
+                                                    {% set liste = img.url %}
+                                                  {% endfor %}
+                                                  {{ dump(liste) }}
+                                                  
+                                                   <div class="photo">
+                                                    <img class="media-object" width="150" src="{{dump(liste)}}"/>
+                                                </div>-->
+                                              
+                                                   </td>
+                                             </tr>
+                                            {% endfor %}
+                                        
+                                    </tbody>
+
+                                      {% else %}
+                                          <thead>
+                                            <tr>
+                                                
+                                                <th>Artist</th>
+                                                <th>Année</th>
+                                                <th>Chanson</th>
+                                                <th>Genre</th> 
+                                                
+                                                
+                                             </tr>
+                                           </thead>
+
+                                      <tbody>
+                                         {% for L in lyrics %}
+                                             <tr rol="row" class="odd">
+                                              <td>{{L.artist}} </td>
+                                               <td>{{L.annee}}</td>
+
+                                                    <td> <p>{{L.song}}</p> </td>
+                                                    <td>
+                                                        <a class="nav-link" href="#" target="_blank" >
+                                                          <i class="material-icons dp48">queue_music</i>
+                                                         </a>
+                                                      {{L.genre}}
+                                                    </td>
+                                                 </tr>
+                                               {% endfor %}
+                                        </tbody>
+                                      
+                                      {% endif %}
+                                </table>
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+
+                        <div class="row" id="Graphique" >
+                          <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="card card-stats">
+                              <div class="card-header card-header-warning card-header-icon">
+                                <div class="card-icon">
+                                 <i class="material-icons dp48">library_music</i>
+                                </div>
+                                <p class="card-category">Nombre playlist</p>
+                                <h3 class="card-title">{{nbr_song}}</h3>
+                              </div>
+                              <div class="card-footer">
+                                <div class="stats">
+                                  <i class="material-icons dp48">library_music</i>
+                                  <a href="#pablo"></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="card card-stats">
+                              <div class="card-header card-header-rose card-header-icon">
+                                <div class="card-icon">
+                                 <i class="material-icons dp48">library_music</i>
+                                </div>
+                                <p class="card-category">Nombre Chansons</p>
+                                <h3 class="card-title">{{nombre_track}}</h3>
+                               </div> 
+                                <div class="card-footer">
+                                <div class="stats">
+                                  <i class="material-icons dp48">library_music</i>
+                                  <a href="#pablo"></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="card card-stats">
+                              <div class="card-header card-header-success card-header-icon">
+                                <div class="card-icon">
+                                  <i class="material-icons">store</i>
+                                </div>
+                                <p class="card-category">{{Topic}}</p>
+                                <h3 class="card-title">😔</h3>
+                              </div>
+                                <div class="card-footer">
+                                <div class="stats">
+                                  <i class="material-icons dp48">library_music</i>
+                                  <a href="#pablo"></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                         
+                        </div>
+                      
+                      </div>
+                    </div>
+                  </div>
+              </div>
+                   
+<!--<script type="text/javascript" src="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+</script>
+<script type="text/javascript" src= "https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js">
+</script>-->
+ 
+<script>
+$('#datatables').DataTable( {
+    "language": {
+      "url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
+    },
+    dom: 'Bfrtip',
+    buttons: [
+        'excelHtml5',
+        'csvHtml5',
+        'pdfHtml5'
+    ]
+} );
+</script>
+       

@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.1/dist/semantic.min.css">
+
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}
+        {% block header %}
+        <header>
+        </header>
+        {% endblock %}
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+        {% endblock %}
+        {% block footer %}
+        <footer>
+        </footer>
+        {% endblock %}
+        <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.1/dist/semantic.min.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
